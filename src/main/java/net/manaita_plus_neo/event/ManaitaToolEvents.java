@@ -10,9 +10,11 @@ import net.manaita_plus_neo.util.ManaitaToolUtils;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import java.util.function.BiPredicate;
 
 @EventBusSubscriber(modid = ManaitaPlusNeo.MOD_ID)
 public class ManaitaToolEvents {
@@ -23,70 +25,31 @@ public class ManaitaToolEvents {
         ItemStack itemstack = player.getMainHandItem();
 
         if (itemstack.getItem() instanceof ManaitaAxe) {
-            ManaitaAxe axe = (ManaitaAxe) itemstack.getItem();
-            Level level = player.level();
-            int range = ManaitaToolUtils.getRange(itemstack);
-
-            ManaitaToolUtils.performRangeBreak(
-                itemstack, 
-                level, 
-                event.getPos(), 
-                player, 
-                range, 
-                (tool, blockState) -> axe.isCorrectToolForDrops(tool, blockState)
-            );
+            handleToolBreakEvent(event, itemstack, player, (tool, blockState) -> ((ManaitaAxe) tool.getItem()).isCorrectToolForDrops(tool, blockState));
         } else if (itemstack.getItem() instanceof ManaitaPickaxe) {
-            ManaitaPickaxe pickaxe = (ManaitaPickaxe) itemstack.getItem();
-            Level level = player.level();
-            int range = ManaitaToolUtils.getRange(itemstack);
-
-            ManaitaToolUtils.performRangeBreak(
-                itemstack, 
-                level, 
-                event.getPos(), 
-                player, 
-                range, 
-                (tool, blockState) -> pickaxe.isCorrectToolForDrops(tool, blockState)
-            );
+            handleToolBreakEvent(event, itemstack, player, (tool, blockState) -> ((ManaitaPickaxe) tool.getItem()).isCorrectToolForDrops(tool, blockState));
         } else if (itemstack.getItem() instanceof ManaitaShovel) {
-            ManaitaShovel shovel = (ManaitaShovel) itemstack.getItem();
-            Level level = player.level();
-            int range = ManaitaToolUtils.getRange(itemstack);
-
-            ManaitaToolUtils.performRangeBreak(
-                itemstack, 
-                level, 
-                event.getPos(), 
-                player, 
-                range, 
-                (tool, blockState) -> shovel.isCorrectToolForDrops(tool, blockState)
-            );
+            handleToolBreakEvent(event, itemstack, player, (tool, blockState) -> ((ManaitaShovel) tool.getItem()).isCorrectToolForDrops(tool, blockState));
         } else if (itemstack.getItem() instanceof ManaitaHoe) {
-            ManaitaHoe hoe = (ManaitaHoe) itemstack.getItem();
-            Level level = player.level();
-            int range = ManaitaToolUtils.getRange(itemstack);
-
-            ManaitaToolUtils.performRangeBreak(
-                itemstack, 
-                level, 
-                event.getPos(), 
-                player, 
-                range, 
-                (tool, blockState) -> hoe.isCorrectToolForDrops(tool, blockState)
-            );
+            handleToolBreakEvent(event, itemstack, player, (tool, blockState) -> ((ManaitaHoe) tool.getItem()).isCorrectToolForDrops(tool, blockState));
         } else if (itemstack.getItem() instanceof ManaitaShears) {
-            ManaitaShears shears = (ManaitaShears) itemstack.getItem();
-            Level level = player.level();
-            int range = ManaitaToolUtils.getRange(itemstack);
-
-            ManaitaToolUtils.performRangeBreak(
-                itemstack, 
-                level, 
-                event.getPos(), 
-                player, 
-                range, 
-                (tool, blockState) -> shears.isCorrectToolForDrops(tool, blockState)
-            );
+            handleToolBreakEvent(event, itemstack, player, (tool, blockState) -> ((ManaitaShears) tool.getItem()).isCorrectToolForDrops(tool, blockState));
         }
+    }
+
+    private static void handleToolBreakEvent(BlockEvent.BreakEvent event, ItemStack itemstack, Player player, BiPredicate<ItemStack, BlockState> canMineBlock) {
+        Level level = player.level();
+        int range = ManaitaToolUtils.getRange(itemstack);
+
+        ManaitaToolUtils.performRangeBreak(
+            itemstack, 
+            level, 
+            event.getPos(), 
+            player, 
+            range, 
+            canMineBlock
+        );
+
+        ManaitaToolUtils.handleDropsAndExp(event, itemstack);
     }
 }

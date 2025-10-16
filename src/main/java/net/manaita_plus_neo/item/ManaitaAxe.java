@@ -1,25 +1,31 @@
 package net.manaita_plus_neo.item;
 
+import net.manaita_plus_neo.item.data.IManaitaPlusKey;
+import net.manaita_plus_neo.util.ManaitaToolUtils;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.minecraft.network.chat.Component;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.common.ItemAbility;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
-import net.manaita_plus_neo.util.ManaitaToolUtils;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.common.ItemAbility;
+import net.neoforged.neoforge.event.level.BlockEvent;
 
-public class ManaitaAxe extends AxeItem {
+import java.util.List;
+
+public class ManaitaAxe extends AxeItem implements IManaitaPlusKey {
     
     public ManaitaAxe(Tier tier, Item.Properties properties) {
         super(tier, properties);
@@ -51,12 +57,16 @@ public class ManaitaAxe extends AxeItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack p_41421_, Item.TooltipContext p_41422_, java.util.List<net.minecraft.network.chat.Component> p_41423_, net.minecraft.world.item.TooltipFlag p_41424_) {
+    public void appendHoverText(ItemStack p_41421_, Item.TooltipContext p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
         super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
         int range = ManaitaToolUtils.getRange(p_41421_);
         String rangeText = I18n.get("mode.manaita_tool");
         String sizeText = I18n.get("mode.range.name");
         p_41423_.add(Component.literal(ManaitaToolUtils.ManaitaText.manaita_mode.formatting("[" + sizeText + "] " + rangeText + ": " + range + "x" + range + "x" + range)));
+        boolean doubling = ManaitaToolUtils.isDoublingEnabled(p_41421_);
+        String doublingText = I18n.get("mode.doubling");
+        String statusText = doubling ? I18n.get("info.on") : I18n.get("info.off");
+        p_41423_.add(Component.literal(ManaitaToolUtils.ManaitaText.manaita_mode.formatting("[" + doublingText + "] " + statusText)));
     }
 
     @Override
@@ -86,6 +96,20 @@ public class ManaitaAxe extends AxeItem {
 
     @Override
     public boolean canPerformAction(ItemStack stack, ItemAbility toolAction) {
-        return net.neoforged.neoforge.common.ItemAbilities.DEFAULT_AXE_ACTIONS.contains(toolAction);
+        return ItemAbilities.DEFAULT_AXE_ACTIONS.contains(toolAction);
+    }
+
+    public static void handleDropsAndExp(BlockEvent.BreakEvent event, ItemStack toolStack) {
+        ManaitaToolUtils.handleDropsAndExp(event, toolStack);
+    }
+    
+    @Override
+    public void onManaitaKeyPress(ItemStack itemStack, Player player) {
+        ManaitaToolUtils.handleManaitaKeyPress(itemStack, player, I18n.get("item.manaita_plus_neo.manaita_axe"));
+    }
+
+    @Override
+    public void onManaitaKeyPressOnClient(ItemStack itemStack, Player player) {
+        ManaitaToolUtils.handleManaitaKeyPressOnClient(itemStack, player, I18n.get("item.manaita_plus_neo.manaita_axe"));
     }
 }

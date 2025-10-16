@@ -3,6 +3,7 @@ package net.manaita_plus_neo.item;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShearsItem;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.InteractionHand;
@@ -17,8 +18,12 @@ import net.neoforged.neoforge.common.ItemAbility;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Blocks;
 import net.manaita_plus_neo.util.ManaitaToolUtils;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import net.manaita_plus_neo.item.data.IManaitaPlusKey;
 
-public class ManaitaShears extends ShearsItem {
+import java.util.List;
+
+public class ManaitaShears extends ShearsItem implements IManaitaPlusKey {
     
     public ManaitaShears(Item.Properties properties) {
         super(properties);
@@ -51,12 +56,16 @@ public class ManaitaShears extends ShearsItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack p_41421_, Item.TooltipContext p_41422_, java.util.List<net.minecraft.network.chat.Component> p_41423_, net.minecraft.world.item.TooltipFlag p_41424_) {
+    public void appendHoverText(ItemStack p_41421_, Item.TooltipContext p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
         super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
         int range = ManaitaToolUtils.getRange(p_41421_);
         String rangeText = I18n.get("mode.manaita_tool");
         String sizeText = I18n.get("mode.range.name");
-        p_41423_.add(Component.literal(ManaitaToolUtils.ManaitaText.manaita_mode.formatting("" + sizeText + " " + rangeText + ": " + range + "x" + range + "x" + range)));
+        p_41423_.add(Component.literal(ManaitaToolUtils.ManaitaText.manaita_mode.formatting("[" + sizeText + "] " + rangeText + ": " + range + "x" + range + "x" + range)));
+        boolean doubling = ManaitaToolUtils.isDoublingEnabled(p_41421_);
+        String doublingText = I18n.get("mode.doubling");
+        String statusText = doubling ? I18n.get("info.on") : I18n.get("info.off");
+        p_41423_.add(Component.literal(ManaitaToolUtils.ManaitaText.manaita_mode.formatting("[" + doublingText + "] " + statusText)));
     }
 
     @Override
@@ -72,16 +81,18 @@ public class ManaitaShears extends ShearsItem {
         return InteractionResultHolder.pass(itemInHand);
     }
 
-    public int getRange(ItemStack itemStack) {
-        return ManaitaToolUtils.getRange(itemStack);
-    }
-
-    public void setRange(ItemStack itemStack, int range) {
-        ManaitaToolUtils.setRange(itemStack, range);
-    }
-
     @Override
     public boolean canPerformAction(ItemStack stack, ItemAbility toolAction) {
         return ItemAbilities.DEFAULT_SHEARS_ACTIONS.contains(toolAction);
+    }
+    
+    @Override
+    public void onManaitaKeyPress(ItemStack itemStack, Player player) {
+        ManaitaToolUtils.handleManaitaKeyPress(itemStack, player, I18n.get("item.manaita_plus_neo.manaita_shears"));
+    }
+
+    @Override
+    public void onManaitaKeyPressOnClient(ItemStack itemStack, Player player) {
+        ManaitaToolUtils.handleManaitaKeyPressOnClient(itemStack, player, I18n.get("item.manaita_plus_neo.manaita_shears"));
     }
 }

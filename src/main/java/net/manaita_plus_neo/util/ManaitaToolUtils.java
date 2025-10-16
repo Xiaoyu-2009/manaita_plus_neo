@@ -28,7 +28,11 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.neoforged.neoforge.common.ItemAbilities;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.neoforge.event.level.BlockEvent;
 
 import java.util.Arrays;
 import java.util.List;
@@ -79,6 +83,23 @@ public class ManaitaToolUtils {
         }
     }
 
+    public static boolean isDoublingEnabled(ItemStack itemStack) {
+        var customData = itemStack.get(DataComponents.CUSTOM_DATA);
+        if (customData != null) {
+            var tag = customData.getUnsafe();
+            if (tag.contains("Doubling")) {
+                return tag.getBoolean("Doubling");
+            }
+        }
+        return false;
+    }
+
+    public static void setDoublingEnabled(ItemStack itemStack, boolean enabled) {
+        var tag = new CompoundTag();
+        tag.putBoolean("Doubling", enabled);
+        itemStack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
+    }
+
     public static void toggleRange(ItemStack itemStack, Player player, int maxRange, String itemName) {
         int currentRange = getRange(itemStack);
         int newRange = currentRange + 2;
@@ -99,9 +120,11 @@ public class ManaitaToolUtils {
         var currentEnchantments = EnchantmentHelper.getEnchantmentsForCrafting(itemStack);
         var mutableEnchantments = new ItemEnchantments.Mutable(currentEnchantments);
 
+        Holder<Enchantment> silkTouchHolder = player.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.SILK_TOUCH);
+        Holder<Enchantment> fortuneHolder = player.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.FORTUNE);
+
         if (!hasSilkTouch(currentEnchantments)) {
-            mutableEnchantments.removeIf(holder -> true);
-            Holder<Enchantment> silkTouchHolder = player.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.SILK_TOUCH);
+            mutableEnchantments.removeIf(holder -> holder.equals(fortuneHolder));
             mutableEnchantments.set(silkTouchHolder, 1);
             EnchantmentHelper.setEnchantments(itemStack, mutableEnchantments.toImmutable());
             String s = I18n.get("enchantments.silktouch");
@@ -110,8 +133,7 @@ public class ManaitaToolUtils {
                 ManaitaText.manaita_enchantment.formatting(itemName + enchantmentText + ": " + s)
             ));
         } else {
-            mutableEnchantments.removeIf(holder -> true);
-            Holder<Enchantment> fortuneHolder = player.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.FORTUNE);
+            mutableEnchantments.removeIf(holder -> holder.equals(silkTouchHolder));
             mutableEnchantments.set(fortuneHolder, 10);
             EnchantmentHelper.setEnchantments(itemStack, mutableEnchantments.toImmutable());
             String s = I18n.get("enchantments.fortune");
@@ -278,5 +300,50 @@ public class ManaitaToolUtils {
             }
         }
         return flag ? InteractionResult.sidedSuccess(level.isClientSide) : InteractionResult.PASS;
+    }
+
+    public static void handleDropsAndExp(BlockEvent.BreakEvent event, ItemStack toolStack) {
+        if (isDoublingEnabled(toolStack) && !event.getPlayer().getAbilities().instabuild) {
+            Level level = event.getPlayer().level();
+            BlockPos pos = event.getPos();
+
+            BlockState state = event.getState();
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            List<ItemStack> drops = Block.getDrops(state, (ServerLevel) level, pos, blockEntity, event.getPlayer(), toolStack);
+
+            for (ItemStack drop : drops) {
+                if (!drop.isEmpty()) {
+                    ItemStack extraDrop = drop.copy();
+                    extraDrop.setCount(extraDrop.getCount() * 3);
+                    ItemEntity itemEntity = new ItemEntity(
+                        level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, extraDrop
+                    );
+                    level.addFreshEntity(itemEntity);
+                }
+            }
+            
+            int exp = state.getExpDrop((ServerLevel) level, pos, blockEntity, event.getPlayer(), toolStack);
+            if (exp > 0) {
+                ExperienceOrb.award((ServerLevel) level, 
+                    Vec3.atCenterOf(pos), exp * 3);
+            }
+        }
+    }
+
+    public static void handleManaitaKeyPress(ItemStack itemStack, Player player, String itemName) {
+        boolean doubling = !isDoublingEnabled(itemStack);
+        setDoublingEnabled(itemStack, doubling);
+    }
+
+    public static void handleManaitaKeyPressOnClient(ItemStack itemStack, Player player, String itemName) {
+        boolean doubling = !isDoublingEnabled(itemStack);
+        setDoublingEnabled(itemStack, doubling);
+        String doublingText = I18n.get("mode.doubling");
+        String statusText = doubling ? I18n.get("info.on") : I18n.get("info.off");
+        player.sendSystemMessage(Component.literal(
+            ManaitaText.manaita_mode.formatting(
+                "[" + itemName + "] " + doublingText + ": " + statusText
+            )
+        ));
     }
 }
