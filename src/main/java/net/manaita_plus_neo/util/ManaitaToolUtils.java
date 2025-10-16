@@ -175,26 +175,13 @@ public class ManaitaToolUtils {
     }
 
     private static void destroyBlockWithEnchantments(ItemStack toolItem, Level level, Player player, BlockPos pos,BlockState blockstate) {
-        if (!(level instanceof ServerLevel serverLevel)) {
+        if (!(level instanceof ServerLevel)) {
             level.removeBlock(pos, false);
             return;
         }
-
-        List<ItemStack> drops = Block.getDrops(blockstate, serverLevel, pos, null, player, toolItem);
+        
+        Block.dropResources(blockstate, level, pos, null, player, toolItem);
         level.removeBlock(pos, false);
-
-        for (ItemStack drop : drops) {
-            if (!drop.isEmpty()) {
-                Block.popResource(level, pos, drop);
-            }
-        }
-
-        try {
-            int exp = blockstate.getExpDrop(serverLevel, pos, null, player, toolItem);
-            if (exp > 0) {
-                ExperienceOrb.award(serverLevel, pos.getCenter(), exp);
-            }
-        } catch (Exception e) {}
     }
 
     public static InteractionResult performAxeRightClick(UseOnContext context) {
