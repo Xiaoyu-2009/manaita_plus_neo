@@ -42,7 +42,14 @@ public class ManaitaHoe extends HoeItem implements IManaitaPlusKey {
     }
 
     @Override
-    public boolean mineBlock(ItemStack p_40998_, Level p_40999_, BlockState p_41000_, BlockPos p_41001_, LivingEntity p_41002_) {
+    public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity miningEntity) {
+        int range = ManaitaToolUtils.getRange(stack);
+
+        if (miningEntity instanceof Player player) {
+            ManaitaToolUtils.performRangeBreak(stack, level, pos, player, range, 
+            (tool, blockState) -> isCorrectToolForDrops(tool, blockState));
+        }
+        
         return true;
     }
 

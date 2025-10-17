@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import java.util.function.BiPredicate;
 
 @EventBusSubscriber(modid = ManaitaPlusNeo.MOD_ID)
@@ -37,6 +38,37 @@ public class ManaitaToolEvents {
             handleToolBreakEvent(event, itemstack, player, (tool, blockState) -> ((ManaitaShears) tool.getItem()).isCorrectToolForDrops(tool, blockState));
         } else if (itemstack.getItem() instanceof ManaitaPaxel) {
             handleToolBreakEvent(event, itemstack, player, (tool, blockState) -> ((ManaitaPaxel) tool.getItem()).isCorrectToolForDrops(tool, blockState));
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
+        if (event.getLevel().isClientSide()) {
+            return;
+        }
+
+        Player player = event.getEntity();
+        ItemStack itemstack = player.getMainHandItem();
+
+        if (itemstack.getItem() instanceof ManaitaPaxel) {
+            int range = ManaitaToolUtils.getRange(itemstack);
+
+            ManaitaToolUtils.destroyBlocksInRange(
+                itemstack,
+                event.getLevel(),
+                event.getPos(),
+                player,
+                range
+            );
+
+            BlockState state = event.getLevel().getBlockState(event.getPos());
+            BlockEvent.BreakEvent breakEvent = new BlockEvent.BreakEvent(
+                event.getLevel(), 
+                event.getPos(), 
+                state, 
+                player
+            );
+            ManaitaToolUtils.handleDropsAndExp(breakEvent, itemstack);
         }
     }
 

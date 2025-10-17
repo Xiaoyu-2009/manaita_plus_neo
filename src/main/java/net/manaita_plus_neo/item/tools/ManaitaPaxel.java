@@ -56,7 +56,7 @@ public class ManaitaPaxel extends DiggerItem implements IManaitaPlusKey {
     public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity miningEntity) {
         int range = ManaitaToolUtils.getRange(stack);
 
-        if (range > 1 && miningEntity instanceof Player player) {
+        if (miningEntity instanceof Player player) {
             ManaitaToolUtils.performRangeBreak(stack, level, pos, player, range, 
             (tool, blockState) -> isCorrectToolForDrops(tool, blockState));
         }

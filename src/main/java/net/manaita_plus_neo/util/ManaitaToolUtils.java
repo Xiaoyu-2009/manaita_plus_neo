@@ -1,5 +1,6 @@
 package net.manaita_plus_neo.util;
 
+import net.manaita_plus_neo.item.tools.ManaitaPaxel;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -44,6 +45,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiPredicate;
+
+import static net.minecraft.world.level.block.Block.popResource;
 
 public class ManaitaToolUtils {
 
@@ -173,28 +176,52 @@ public class ManaitaToolUtils {
     }
 
     public static void performRangeBreak(ItemStack toolItem, Level level, BlockPos pos, Player player, int range, BiPredicate<ItemStack, BlockState> canMineBlock) {
-        if (range <= 1) {
-            return;
+        performRangeBreakWithHandler(toolItem, level, pos, player, range, canMineBlock, 
+            (stack, lvl, ply, blockPos, blockstate) -> {
+                destroyBlockWithEnchantments(stack, lvl, ply, blockPos, blockstate);
+            }
+        );
+    }
+
+    public static void destroyBlocksInRange(ItemStack stack, Level level, BlockPos pos, Player player, int range) {
+        performRangeBreakWithHandler(stack, level, pos, player, range, 
+            (tool, blockState) -> canDestroyBlock(blockState),
+            (toolItem, lvl, ply, blockPos, blockstate) -> {
+                destroyBlockWithEnchantments(toolItem, lvl, ply, blockPos, blockstate);
+            }
+        );
+    }
+
+    private static void performRangeBreakWithHandler(
+        ItemStack toolItem, 
+        Level level, 
+        BlockPos pos, 
+        Player player, 
+        int range, 
+        BiPredicate<ItemStack, BlockState> canMineBlock,
+        BlockHandler blockHandler
+    ) {
+        BlockState centerBlockState = level.getBlockState(pos);
+        if (canMineBlock.test(toolItem, centerBlockState)) {
+            blockHandler.handle(toolItem, level, player, pos, centerBlockState);
         }
 
-        int radius = range / 2;
-        BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
+        if (range > 1) {
+            int radius = range / 2;
+            BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
 
-        for (int x = -radius; x <= radius; x++) {
-            for (int y = -radius; y <= radius; y++) {
-                for (int z = -radius; z <= radius; z++) {
-                    if (x == 0 && y == 0 && z == 0) {
-                        continue;
-                    }
+            for (int x = -radius; x <= radius; x++) {
+                for (int y = -radius; y <= radius; y++) {
+                    for (int z = -radius; z <= radius; z++) {
+                        if (x == 0 && y == 0 && z == 0) {
+                            continue;
+                        }
 
-                    mutablePos.set(pos.getX() + x, pos.getY() + y, pos.getZ() + z);
-                    BlockState blockstate = level.getBlockState(mutablePos);
+                        mutablePos.set(pos.getX() + x, pos.getY() + y, pos.getZ() + z);
+                        BlockState blockstate = level.getBlockState(mutablePos);
 
-                    if (canMineBlock.test(toolItem, blockstate)) {
-                        if (player.getAbilities().instabuild) {
-                            level.removeBlock(mutablePos, false);
-                        } else {
-                            destroyBlockWithEnchantments(toolItem, level, player, mutablePos, blockstate);
+                        if (canMineBlock.test(toolItem, blockstate)) {
+                            blockHandler.handle(toolItem, level, player, mutablePos, blockstate);
                         }
                     }
                 }
@@ -202,13 +229,33 @@ public class ManaitaToolUtils {
         }
     }
 
+    @FunctionalInterface
+    private interface BlockHandler {
+        void handle(ItemStack toolItem, Level level, Player player, BlockPos pos, BlockState blockstate);
+    }
+
+    public static boolean canDestroyBlock(BlockState blockState) {
+        return true;
+    }
+
     private static void destroyBlockWithEnchantments(ItemStack toolItem, Level level, Player player, BlockPos pos,BlockState blockstate) {
-        if (!(level instanceof ServerLevel)) {
+        if (player.getAbilities().instabuild) {
             level.removeBlock(pos, false);
             return;
         }
         
+        if (!(level instanceof ServerLevel)) {
+            level.removeBlock(pos, false);
+            return;
+        }
+
         Block.dropResources(blockstate, level, pos, null, player, toolItem);
+
+        if (toolItem.getItem() instanceof ManaitaPaxel && blockstate.getBlock().defaultDestroyTime() < 0) {
+            ItemStack bedrockDrop = new ItemStack(blockstate.getBlock());
+            popResource(level, pos, bedrockDrop);
+        }
+        
         level.removeBlock(pos, false);
     }
 
@@ -359,7 +406,7 @@ public class ManaitaToolUtils {
     }
 
     public static void handleDropsAndExp(BlockEvent.BreakEvent event, ItemStack toolStack) {
-        if (isDoublingEnabled(toolStack) && !event.getPlayer().getAbilities().instabuild) {
+        if (isDoublingEnabled(toolStack)) {
             Level level = event.getPlayer().level();
             BlockPos pos = event.getPos();
 
