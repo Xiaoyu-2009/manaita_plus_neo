@@ -77,7 +77,7 @@ public class ManaitaArmorUtils {
                 return tag.getInt("Speed");
             }
         }
-        return 0;
+        return 1;
     }
     
     public static void setSpeed(ItemStack itemStack, int speed) {
@@ -112,12 +112,13 @@ public class ManaitaArmorUtils {
     
     public static void handleSpeedKeyPressOnClient(ItemStack itemStack, Player player) {
         int speed = getSpeed(itemStack);
-        speed = (speed + 1) % 10;
+        speed = (speed % 9) + 1;
         setSpeed(itemStack, speed);
         String speedText = I18n.get("mode.speed");
+        String displaySpeed = (speed == 1) ? I18n.get("info.default") : String.valueOf(speed);
         player.displayClientMessage(Component.literal(
             ManaitaToolUtils.ManaitaText.manaita_mode.formatting(
-                "[" + I18n.get("item.manaita_plus_neo.manaita_boots") + "] " + speedText + ": " + speed
+                "[" + I18n.get("item.manaita_plus_neo.manaita_boots") + "] " + speedText + ": " + displaySpeed
             )
         ), true);
     }

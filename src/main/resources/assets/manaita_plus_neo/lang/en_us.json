@@ -104,6 +104,7 @@
   "info.enchantment": "Enchantment",
   "info.on":"On",
   "info.off": "Off",
+  "info.default": "Default",
 
   "mode.doubling": "Doubling",
   "mode.manaita_sword": "AttackRange",

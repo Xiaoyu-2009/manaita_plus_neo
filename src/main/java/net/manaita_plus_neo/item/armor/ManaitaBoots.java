@@ -22,8 +22,9 @@ public class ManaitaBoots extends ArmorItem implements IManaitaPlusKey {
         super.appendHoverText(stack, context, tooltip, flag);
         tooltip.add(Component.literal(ManaitaToolUtils.ManaitaText.manaita_infinity.formatting(I18n.get("info.armor"))));
         int speed = ManaitaArmorUtils.getSpeed(stack);
+        String displaySpeed = (speed == 1) ? I18n.get("info.default") : String.valueOf(speed);
         tooltip.add(Component.literal(ManaitaToolUtils.ManaitaText.manaita_mode.formatting(
-            I18n.get("mode.speed") + ": " + speed)
+            I18n.get("mode.speed") + ": " + displaySpeed)
         ));
     }
     
@@ -31,7 +32,7 @@ public class ManaitaBoots extends ArmorItem implements IManaitaPlusKey {
     public void onManaitaKeyPress(ItemStack itemStack, Player player) {
         if (!player.isShiftKeyDown()) {
             int speed = ManaitaArmorUtils.getSpeed(itemStack);
-            speed = (speed + 1) % 10;
+            speed = (speed % 9) + 1;
             ManaitaArmorUtils.setSpeed(itemStack, speed);
         }
     }

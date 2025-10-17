@@ -105,6 +105,7 @@
   "info.enchantment": "附魔",
   "info.on":"开启",
   "info.off": "关闭",
+  "info.default": "默认",
 
   "mode.doubling": "翻倍",
   "mode.manaita_sword": "攻击范围",

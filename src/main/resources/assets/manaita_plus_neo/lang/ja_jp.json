@@ -106,6 +106,7 @@
   "info.enchantment": "エンチャント",
   "info.on":"開ける",
   "info.off": "シャットダウン",
+  "info.default": "デフォルト",
 
   "mode.doubling": "倍化",
   "mode.manaita_sword": "攻撃範囲",
