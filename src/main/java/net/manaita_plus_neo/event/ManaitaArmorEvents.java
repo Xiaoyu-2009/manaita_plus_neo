@@ -37,7 +37,7 @@ public class ManaitaArmorEvents {
         // 头盔/夜视
         ItemStack helmet = player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.HEAD);
         if (helmet.getItem() instanceof ManaitaHelmet && ManaitaArmorUtils.getNightVision(helmet)) {
-            player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 2, 0, false, false));
+            player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 2, 0, false, false, false));
         }
         
         // 护腿/隐身
