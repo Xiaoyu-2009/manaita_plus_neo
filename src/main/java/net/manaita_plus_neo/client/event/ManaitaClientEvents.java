@@ -28,14 +28,40 @@ public class ManaitaClientEvents {
             }
         }
         
-        // 盔甲
-        if (ManaitaKeyBindings.manaitaArmorKey.consumeClick()) {
-            for (ItemStack itemStack : mc.player.getInventory().armor) {
-                if (!itemStack.isEmpty() && itemStack.getItem() instanceof IManaitaPlusKey key) {
-                    key.onManaitaKeyPressOnClient(itemStack, mc.player);
-                }
+        // 头盔
+        if (ManaitaKeyBindings.manaitaHelmetKey.consumeClick()) {
+            ItemStack helmet = mc.player.getInventory().armor.get(3);
+            if (!helmet.isEmpty() && helmet.getItem() instanceof IManaitaPlusKey helmetKey) {
+                helmetKey.onManaitaKeyPressOnClient(helmet, mc.player);
+                PacketDistributor.sendToServer(new MessageKey((byte)2));
             }
-            PacketDistributor.sendToServer(new MessageKey((byte)1));
+        }
+        
+        // 护甲
+        if (ManaitaKeyBindings.manaitaChestplateKey.consumeClick()) {
+            ItemStack chestplate = mc.player.getInventory().armor.get(2);
+            if (!chestplate.isEmpty() && chestplate.getItem() instanceof IManaitaPlusKey chestplateKey) {
+                chestplateKey.onManaitaKeyPressOnClient(chestplate, mc.player);
+                PacketDistributor.sendToServer(new MessageKey((byte)3));
+            }
+        }
+        
+        // 护腿
+        if (ManaitaKeyBindings.manaitaLeggingsKey.consumeClick()) {
+            ItemStack leggings = mc.player.getInventory().armor.get(1);
+            if (!leggings.isEmpty() && leggings.getItem() instanceof IManaitaPlusKey leggingsKey) {
+                leggingsKey.onManaitaKeyPressOnClient(leggings, mc.player);
+                PacketDistributor.sendToServer(new MessageKey((byte)4));
+            }
+        }
+        
+        // 靴子
+        if (ManaitaKeyBindings.manaitaBootsKey.consumeClick()) {
+            ItemStack boots = mc.player.getInventory().armor.get(0);
+            if (!boots.isEmpty() && boots.getItem() instanceof IManaitaPlusKey bootsKey) {
+                bootsKey.onManaitaKeyPressOnClient(boots, mc.player);
+                PacketDistributor.sendToServer(new MessageKey((byte)5));
+            }
         }
     }
 }

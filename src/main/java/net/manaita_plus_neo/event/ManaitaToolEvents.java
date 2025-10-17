@@ -1,11 +1,11 @@
 package net.manaita_plus_neo.event;
 
 import net.manaita_plus_neo.ManaitaPlusNeo;
-import net.manaita_plus_neo.item.ManaitaAxe;
-import net.manaita_plus_neo.item.ManaitaPickaxe;
-import net.manaita_plus_neo.item.ManaitaShovel;
-import net.manaita_plus_neo.item.ManaitaHoe;
-import net.manaita_plus_neo.item.ManaitaShears;
+import net.manaita_plus_neo.item.tools.ManaitaAxe;
+import net.manaita_plus_neo.item.tools.ManaitaPickaxe;
+import net.manaita_plus_neo.item.tools.ManaitaShovel;
+import net.manaita_plus_neo.item.tools.ManaitaHoe;
+import net.manaita_plus_neo.item.tools.ManaitaShears;
 import net.manaita_plus_neo.util.ManaitaToolUtils;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
