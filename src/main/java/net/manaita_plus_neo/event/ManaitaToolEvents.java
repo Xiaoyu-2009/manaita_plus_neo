@@ -6,6 +6,7 @@ import net.manaita_plus_neo.item.tools.ManaitaPickaxe;
 import net.manaita_plus_neo.item.tools.ManaitaShovel;
 import net.manaita_plus_neo.item.tools.ManaitaHoe;
 import net.manaita_plus_neo.item.tools.ManaitaShears;
+import net.manaita_plus_neo.item.tools.ManaitaPaxel;
 import net.manaita_plus_neo.util.ManaitaToolUtils;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -34,6 +35,8 @@ public class ManaitaToolEvents {
             handleToolBreakEvent(event, itemstack, player, (tool, blockState) -> ((ManaitaHoe) tool.getItem()).isCorrectToolForDrops(tool, blockState));
         } else if (itemstack.getItem() instanceof ManaitaShears) {
             handleToolBreakEvent(event, itemstack, player, (tool, blockState) -> ((ManaitaShears) tool.getItem()).isCorrectToolForDrops(tool, blockState));
+        } else if (itemstack.getItem() instanceof ManaitaPaxel) {
+            handleToolBreakEvent(event, itemstack, player, (tool, blockState) -> ((ManaitaPaxel) tool.getItem()).isCorrectToolForDrops(tool, blockState));
         }
     }
 
