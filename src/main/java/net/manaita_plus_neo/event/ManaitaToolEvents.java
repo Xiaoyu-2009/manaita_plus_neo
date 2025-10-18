@@ -26,16 +26,16 @@ public class ManaitaToolEvents {
         Player player = event.getPlayer();
         ItemStack itemstack = player.getMainHandItem();
 
-        if (itemstack.getItem() instanceof ManaitaAxe) {
-            handleToolBreakEvent(event, itemstack, player, (tool, blockState) -> ((ManaitaAxe) tool.getItem()).isCorrectToolForDrops(tool, blockState));
-        } else if (itemstack.getItem() instanceof ManaitaPickaxe) {
-            handleToolBreakEvent(event, itemstack, player, (tool, blockState) -> ((ManaitaPickaxe) tool.getItem()).isCorrectToolForDrops(tool, blockState));
-        } else if (itemstack.getItem() instanceof ManaitaShovel) {
-            handleToolBreakEvent(event, itemstack, player, (tool, blockState) -> ((ManaitaShovel) tool.getItem()).isCorrectToolForDrops(tool, blockState));
-        } else if (itemstack.getItem() instanceof ManaitaHoe) {
-            handleToolBreakEvent(event, itemstack, player, (tool, blockState) -> ((ManaitaHoe) tool.getItem()).isCorrectToolForDrops(tool, blockState));
-        } else if (itemstack.getItem() instanceof ManaitaShears) {
-            handleToolBreakEvent(event, itemstack, player, (tool, blockState) -> ((ManaitaShears) tool.getItem()).isCorrectToolForDrops(tool, blockState));
+        if (itemstack.getItem() instanceof ManaitaAxe axe) {
+            handleToolBreakEvent(event, itemstack, player, axe::isCorrectToolForDrops);
+        } else if (itemstack.getItem() instanceof ManaitaPickaxe pickaxe) {
+            handleToolBreakEvent(event, itemstack, player, pickaxe::isCorrectToolForDrops);
+        } else if (itemstack.getItem() instanceof ManaitaShovel shovel) {
+            handleToolBreakEvent(event, itemstack, player, shovel::isCorrectToolForDrops);
+        } else if (itemstack.getItem() instanceof ManaitaHoe hoe) {
+            handleToolBreakEvent(event, itemstack, player, hoe::isCorrectToolForDrops);
+        } else if (itemstack.getItem() instanceof ManaitaShears shears) {
+            handleToolBreakEvent(event, itemstack, player, shears::isCorrectToolForDrops);
         }
     }
 

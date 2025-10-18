@@ -1,6 +1,11 @@
 package net.manaita_plus_neo.util;
 
+import net.manaita_plus_neo.item.tools.ManaitaAxe;
+import net.manaita_plus_neo.item.tools.ManaitaHoe;
 import net.manaita_plus_neo.item.tools.ManaitaPaxel;
+import net.manaita_plus_neo.item.tools.ManaitaPickaxe;
+import net.manaita_plus_neo.item.tools.ManaitaShears;
+import net.manaita_plus_neo.item.tools.ManaitaShovel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -138,35 +143,46 @@ public class ManaitaRangeUtils {
 
             BlockState state = event.getState();
             BlockEntity blockEntity = level.getBlockEntity(pos);
-            List<ItemStack> drops = Block.getDrops(state, (ServerLevel) level, pos, blockEntity, event.getPlayer(), toolStack);
 
-            for (ItemStack drop : drops) {
-                if (!drop.isEmpty()) {
-                    ItemStack extraDrop = drop.copy();
-                    extraDrop.setCount(extraDrop.getCount() * 4);
+            if (isToolSuitableForBlock(toolStack, state)) {
+                List<ItemStack> drops = Block.getDrops(state, (ServerLevel) level, pos, blockEntity, event.getPlayer(), toolStack);
+
+                for (ItemStack drop : drops) {
+                    if (!drop.isEmpty()) {
+                        ItemStack extraDrop = drop.copy();
+                        extraDrop.setCount(extraDrop.getCount() * 4);
+                        ItemEntity itemEntity = new ItemEntity(
+                            level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, extraDrop
+                        );
+                        level.addFreshEntity(itemEntity);
+                    }
+                }
+
+                if (toolStack.getItem() instanceof ManaitaPaxel && state.getBlock().defaultDestroyTime() < 0) {
+                    ItemStack bedrockDrop = new ItemStack(state.getBlock());
+                    bedrockDrop.setCount(bedrockDrop.getCount() * 4);
                     ItemEntity itemEntity = new ItemEntity(
-                        level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, extraDrop
+                        level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, bedrockDrop
                     );
                     level.addFreshEntity(itemEntity);
                 }
-            }
 
-            if (toolStack.getItem() instanceof ManaitaPaxel && state.getBlock().defaultDestroyTime() < 0) {
-                ItemStack bedrockDrop = new ItemStack(state.getBlock());
-                bedrockDrop.setCount(bedrockDrop.getCount() * 4);
-                ItemEntity itemEntity = new ItemEntity(
-                    level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, bedrockDrop
-                );
-                level.addFreshEntity(itemEntity);
-            }
-
-            if (!hasSilkTouch(EnchantmentHelper.getEnchantmentsForCrafting(toolStack))) {
-                int exp = state.getExpDrop((ServerLevel) level, pos, blockEntity, event.getPlayer(), toolStack);
-                if (exp > 0) {
-                    ExperienceOrb.award((ServerLevel) level, Vec3.atCenterOf(pos), exp * 4);
+                if (!hasSilkTouch(EnchantmentHelper.getEnchantmentsForCrafting(toolStack))) {
+                    int exp = state.getExpDrop((ServerLevel) level, pos, blockEntity, event.getPlayer(), toolStack);
+                    if (exp > 0) {
+                        ExperienceOrb.award((ServerLevel) level, Vec3.atCenterOf(pos), exp * 4);
+                    }
                 }
             }
         }
+    }
+
+    private static boolean isToolSuitableForBlock(ItemStack toolStack, BlockState blockState) {
+        if (toolStack.getItem() instanceof ManaitaPaxel) {
+            return true;
+        }
+
+        return toolStack.isCorrectToolForDrops(blockState);
     }
     
     public static boolean hasSilkTouch(ItemEnchantments enchantments) {
