@@ -1,7 +1,6 @@
 package net.manaita_plus_neo.item.armor;
 
-import net.manaita_plus_neo.util.ManaitaToolUtils;
-import net.minecraft.client.resources.language.I18n;
+import net.manaita_plus_neo.util.ManaitaCommonUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
@@ -17,11 +16,11 @@ public class ManaitaChestplate extends ArmorItem {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, context, tooltip, flag);
-        tooltip.add(Component.literal(ManaitaToolUtils.ManaitaText.manaita_infinity.formatting(I18n.get("info.armor"))));
+        ManaitaCommonUtils.addArmorTooltip(stack, tooltip);
     }
 
 /*     @Override
     public Component getName(ItemStack stack) {
-        return Component.literal(ManaitaToolUtils.ManaitaText.manaita_infinity.formatting(I18n.get("item.manaita_plus_neo.manaita_chestplate")));
+        return Component.literal(ManaitaTextFormatter.ManaitaText.manaita_infinity.formatting(I18n.get("item.manaita_plus_neo.manaita_chestplate")));
     } */
 }

@@ -36,8 +36,6 @@ public class ManaitaToolEvents {
             handleToolBreakEvent(event, itemstack, player, (tool, blockState) -> ((ManaitaHoe) tool.getItem()).isCorrectToolForDrops(tool, blockState));
         } else if (itemstack.getItem() instanceof ManaitaShears) {
             handleToolBreakEvent(event, itemstack, player, (tool, blockState) -> ((ManaitaShears) tool.getItem()).isCorrectToolForDrops(tool, blockState));
-        } else if (itemstack.getItem() instanceof ManaitaPaxel) {
-            handleToolBreakEvent(event, itemstack, player, (tool, blockState) -> ((ManaitaPaxel) tool.getItem()).isCorrectToolForDrops(tool, blockState));
         }
     }
 
@@ -53,14 +51,6 @@ public class ManaitaToolEvents {
         if (itemstack.getItem() instanceof ManaitaPaxel) {
             int range = ManaitaToolUtils.getRange(itemstack);
 
-            ManaitaToolUtils.destroyBlocksInRange(
-                itemstack,
-                event.getLevel(),
-                event.getPos(),
-                player,
-                range
-            );
-
             BlockState state = event.getLevel().getBlockState(event.getPos());
             BlockEvent.BreakEvent breakEvent = new BlockEvent.BreakEvent(
                 event.getLevel(), 
@@ -69,6 +59,14 @@ public class ManaitaToolEvents {
                 player
             );
             ManaitaToolUtils.handleDropsAndExp(breakEvent, itemstack);
+
+            ManaitaToolUtils.destroyBlocksInRange(
+                itemstack,
+                event.getLevel(),
+                event.getPos(),
+                player,
+                range
+            );
         }
     }
 

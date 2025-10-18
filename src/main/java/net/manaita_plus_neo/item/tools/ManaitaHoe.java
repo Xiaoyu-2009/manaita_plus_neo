@@ -1,91 +1,85 @@
 package net.manaita_plus_neo.item.tools;
 
-import net.minecraft.world.item.*;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.minecraft.network.chat.Component;
+import net.manaita_plus_neo.item.ManaitaToolBase;
+import net.manaita_plus_neo.item.data.IManaitaPlusKey;
+import net.manaita_plus_neo.util.ManaitaToolUtils;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.common.ItemAbility;
-import net.minecraft.tags.BlockTags;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.HoeItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
-import net.manaita_plus_neo.util.ManaitaToolUtils;
-import net.manaita_plus_neo.item.data.IManaitaPlusKey;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.common.ItemAbility;
 
 import java.util.List;
 
 public class ManaitaHoe extends HoeItem implements IManaitaPlusKey {
+    private final ManaitaToolBase toolBase;
     
     public ManaitaHoe(Tier tier, Item.Properties properties) {
         super(tier, properties);
+        this.toolBase = new ManaitaToolBase("hoe") {
+            @Override
+            public String getItemName() {
+                return I18n.get("item.manaita_plus_neo.manaita_hoe");
+            }
+            
+            @Override
+            public int getMaxRange() {
+                return 19;
+            }
+        };
     }
 
     @Override
     public int getDamage(ItemStack stack) {
-        return 0;
+        return toolBase.getDamage(stack);
     }
     
     @Override
     public float getDestroySpeed(ItemStack stack, BlockState state) {
-        return Float.MAX_VALUE;
+        return toolBase.getDestroySpeed(stack, state);
     }
 
     @Override
     public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
-        return state.is(BlockTags.MINEABLE_WITH_HOE);
+        return toolBase.isCorrectToolForDrops(stack, state);
     }
 
     @Override
     public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity miningEntity) {
-        int range = ManaitaToolUtils.getRange(stack);
-
-        if (miningEntity instanceof Player player) {
-            ManaitaToolUtils.performRangeBreak(stack, level, pos, player, range, 
-            (tool, blockState) -> isCorrectToolForDrops(tool, blockState));
-        }
-        
-        return true;
+        return toolBase.mineBlock(stack, level, state, pos, miningEntity);
     }
 
     @Override
-    public boolean canAttackBlock(BlockState p_41441_, Level p_41442_, BlockPos p_41443_, Player p_41444_) {
-        return true;
+    public boolean canAttackBlock(BlockState state, Level level, BlockPos pos, Player player) {
+        return toolBase.canAttackBlock(state, level, pos, player);
     }
 
     @Override
-    public void appendHoverText(ItemStack p_41421_, Item.TooltipContext p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
-        super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
-        int range = ManaitaToolUtils.getRange(p_41421_);
-        String rangeText = I18n.get("mode.manaita_tool");
-        String sizeText = I18n.get("mode.range.name");
-        p_41423_.add(Component.literal(ManaitaToolUtils.ManaitaText.manaita_mode.formatting("[" + sizeText + "] " + rangeText + ": " + range + "x" + range + "x" + range)));
-        boolean doubling = ManaitaToolUtils.isDoublingEnabled(p_41421_);
-        String doublingText = I18n.get("mode.doubling");
-        String statusText = doubling ? I18n.get("info.on") : I18n.get("info.off");
-        p_41423_.add(Component.literal(ManaitaToolUtils.ManaitaText.manaita_mode.formatting("[" + doublingText + "] " + statusText)));
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, context, tooltip, flag);
+        toolBase.appendHoverText(stack, flag, tooltip);
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level p_41432_, Player p_41433_, InteractionHand p_41434_) {
-        ItemStack itemInHand = p_41433_.getItemInHand(p_41434_);
-        if (!p_41432_.isClientSide) {
-            if (p_41433_.isShiftKeyDown()) {
-                ManaitaToolUtils.toggleRange(itemInHand, p_41433_, 19, I18n.get("item.manaita_plus_neo.manaita_hoe"));
-            } else {
-                ManaitaToolUtils.toggleEnchantment(itemInHand, p_41433_, I18n.get("item.manaita_plus_neo.manaita_hoe"));
-            }
-        }
-        return InteractionResultHolder.pass(itemInHand);
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        return toolBase.use(level, player, hand);
     }
 
-    public InteractionResult useOn(UseOnContext p_41341_) {
-        return ManaitaToolUtils.performHoeRightClick(p_41341_);
+    public InteractionResult useOn(UseOnContext context) {
+        return ManaitaToolUtils.performHoeRightClick(context);
     }
 
     @Override
@@ -95,16 +89,11 @@ public class ManaitaHoe extends HoeItem implements IManaitaPlusKey {
     
     @Override
     public void onManaitaKeyPress(ItemStack itemStack, Player player) {
-        ManaitaToolUtils.handleManaitaKeyPress(itemStack, player, I18n.get("item.manaita_plus_neo.manaita_hoe"));
+        toolBase.onManaitaKeyPress(itemStack, player);
     }
 
     @Override
     public void onManaitaKeyPressOnClient(ItemStack itemStack, Player player) {
-        ManaitaToolUtils.handleManaitaKeyPressOnClient(itemStack, player, I18n.get("item.manaita_plus_neo.manaita_hoe"));
+        toolBase.onManaitaKeyPressOnClient(itemStack, player);
     }
-    
-/*     @Override
-    public Component getName(ItemStack stack) {
-        return Component.literal(ManaitaToolUtils.ManaitaText.manaita_infinity.formatting(I18n.get("item.manaita_plus_neo.manaita_hoe")));
-    } */
 }
