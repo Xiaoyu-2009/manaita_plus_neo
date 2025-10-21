@@ -30,7 +30,7 @@ version="${mod_version}" #mandatory
 displayName="${mod_name}" #mandatory
 
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="icon.png" #optional
+logoFile="assets/manaita_plus_neo/textures/logo.png" #optional
 
 # A URL for the "homepage" for this mod, displayed in the mod UI
 # displayURL="${author_address}" #optional
