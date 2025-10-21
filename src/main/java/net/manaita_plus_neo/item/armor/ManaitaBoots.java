@@ -1,9 +1,8 @@
 package net.manaita_plus_neo.item.armor;
 
 import net.manaita_plus_neo.item.data.IManaitaPlusKey;
-import net.manaita_plus_neo.util.ManaitaToolUtils;
 import net.manaita_plus_neo.util.ManaitaArmorUtils;
-import net.minecraft.client.resources.language.I18n;
+import net.manaita_plus_neo.util.ManaitaCommonUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
@@ -20,12 +19,7 @@ public class ManaitaBoots extends ArmorItem implements IManaitaPlusKey {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, context, tooltip, flag);
-        tooltip.add(Component.literal(ManaitaToolUtils.ManaitaText.manaita_infinity.formatting(I18n.get("info.armor"))));
-        int speed = ManaitaArmorUtils.getSpeed(stack);
-        String displaySpeed = (speed == 1) ? I18n.get("info.default") : String.valueOf(speed);
-        tooltip.add(Component.literal(ManaitaToolUtils.ManaitaText.manaita_mode.formatting(
-            I18n.get("mode.speed") + ": " + displaySpeed)
-        ));
+        ManaitaCommonUtils.addBootsTooltip(stack, tooltip);
     }
     
     @Override
@@ -46,6 +40,6 @@ public class ManaitaBoots extends ArmorItem implements IManaitaPlusKey {
 
 /*     @Override
     public Component getName(ItemStack stack) {
-        return Component.literal(ManaitaToolUtils.ManaitaText.manaita_infinity.formatting(I18n.get("item.manaita_plus_neo.manaita_boots")));
+        return Component.literal(ManaitaTextFormatter.ManaitaText.manaita_infinity.formatting(I18n.get("item.manaita_plus_neo.manaita_boots")));
     } */
 }

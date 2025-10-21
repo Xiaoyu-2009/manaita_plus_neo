@@ -11,11 +11,11 @@
       "item": "minecraft:oak_planks"
     },
     "1": {
-      "item": "manaita_plus_legacy:manaita_hook"
+      "item": "manaita_plus_neo:manaita_hook"
     }
   },
   "result": {
-    "item": "manaita_plus_legacy:block_hook_manaita",
+    "item": "manaita_plus_neo:block_hook_manaita",
     "nbt": {
       "ManaitaType": 0
     },

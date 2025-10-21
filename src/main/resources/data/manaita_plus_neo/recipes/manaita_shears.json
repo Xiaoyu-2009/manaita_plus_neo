@@ -6,11 +6,11 @@
   ],
   "key": {
     "&": {
-      "tag": "manaita_plus_legacy:manaita_block_eq"
+      "tag": "manaita_plus_neo:manaita_block_eq"
     }
   },
   "result": {
-    "item": "manaita_plus_legacy:manaita_shears",
+    "item": "manaita_plus_neo:manaita_shears",
     "count": 1
   }
 }

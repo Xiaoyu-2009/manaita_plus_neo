@@ -1,7 +1,9 @@
 package net.manaita_plus_neo.item.tools;
 
+import net.manaita_plus_neo.item.ManaitaToolBase;
 import net.manaita_plus_neo.item.data.IManaitaPlusKey;
 import net.manaita_plus_neo.util.ManaitaToolUtils;
+import net.manaita_plus_neo.util.ManaitaTextFormatter;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -25,21 +27,44 @@ import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
 
 import java.util.List;
+import java.util.function.BiPredicate;
 
 public class ManaitaPaxel extends DiggerItem implements IManaitaPlusKey {
+    private final ManaitaToolBase toolBase;
 
     public ManaitaPaxel(Tier tier, Item.Properties properties) {
         super(tier, BlockTags.MINEABLE_WITH_PICKAXE, properties);
+        this.toolBase = new ManaitaToolBase("paxel") {
+            @Override
+            public String getItemName() {
+                return I18n.get("item.manaita_plus_neo.manaita_paxel");
+            }
+            
+            @Override
+            public int getMaxRange() {
+                return 21;
+            }
+            
+            @Override
+            public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
+                return true;
+            }
+            
+            @Override
+            protected BiPredicate<ItemStack, BlockState> getMinePredicate() {
+                return this::isCorrectToolForDrops;
+            }
+        };
     }
 
     @Override
     public int getDamage(ItemStack stack) {
-        return 0;
+        return toolBase.getDamage(stack);
     }
 
     @Override
     public float getDestroySpeed(ItemStack stack, BlockState state) {
-        return Float.MAX_VALUE;
+        return toolBase.getDestroySpeed(stack, state);
     }
 
     @Override
@@ -49,49 +74,35 @@ public class ManaitaPaxel extends DiggerItem implements IManaitaPlusKey {
 
     @Override
     public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
-        return true;
+        return toolBase.isCorrectToolForDrops(stack, state);
     }
 
     @Override
     public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity miningEntity) {
-        int range = ManaitaToolUtils.getRange(stack);
-
-        if (miningEntity instanceof Player player) {
-            ManaitaToolUtils.performRangeBreak(stack, level, pos, player, range, 
-            (tool, blockState) -> isCorrectToolForDrops(tool, blockState));
-        }
-        
-        return true;
+        return toolBase.mineBlock(stack, level, state, pos, miningEntity);
     }
 
     @Override
     public boolean canAttackBlock(BlockState state, Level level, BlockPos pos, Player player) {
-        return true;
+        return toolBase.canAttackBlock(state, level, pos, player);
     }
 
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, context, tooltip, flag);
-        int range = ManaitaToolUtils.getRange(stack);
-        String rangeText = I18n.get("mode.manaita_tool");
-        String sizeText = I18n.get("mode.range.name");
-        tooltip.add(Component.literal(ManaitaToolUtils.ManaitaText.manaita_mode.formatting("[" + sizeText + "] " + rangeText + ": " + range + "x" + range + "x" + range)));
-        boolean doubling = ManaitaToolUtils.isDoublingEnabled(stack);
-        String doublingText = I18n.get("mode.doubling");
-        String statusText = doubling ? I18n.get("info.on") : I18n.get("info.off");
-        tooltip.add(Component.literal(ManaitaToolUtils.ManaitaText.manaita_mode.formatting("[" + doublingText + "] " + statusText)));
+        toolBase.appendHoverText(stack, flag, tooltip);
         tooltip.add(Component.empty());
-        tooltip.add(Component.literal(ManaitaToolUtils.ManaitaText.manaita_infinity.formatting(I18n.get("info.attack"))));
+        tooltip.add(Component.literal(ManaitaTextFormatter.ManaitaText.manaita_infinity.formatting(I18n.get("info.attack"))));
     }
 
     @Override
     public void onManaitaKeyPress(ItemStack itemStack, Player player) {
-        ManaitaToolUtils.handleManaitaKeyPress(itemStack, player, I18n.get("item.manaita_plus_neo.manaita_paxel"));
+        toolBase.onManaitaKeyPress(itemStack, player);
     }
 
     @Override
     public void onManaitaKeyPressOnClient(ItemStack itemStack, Player player) {
-        ManaitaToolUtils.handleManaitaKeyPressOnClient(itemStack, player, I18n.get("item.manaita_plus_neo.manaita_paxel"));
+        toolBase.onManaitaKeyPressOnClient(itemStack, player);
     }
 
     @Override
@@ -99,9 +110,9 @@ public class ManaitaPaxel extends DiggerItem implements IManaitaPlusKey {
         ItemStack itemInHand = player.getItemInHand(hand);
         if (!level.isClientSide) {
             if (player.isShiftKeyDown()) {
-                ManaitaToolUtils.toggleRange(itemInHand, player, 21, I18n.get("item.manaita_plus_neo.manaita_paxel"));
+                ManaitaToolUtils.toggleRange(itemInHand, player, toolBase.getMaxRange(), toolBase.getItemName());
             } else {
-                ManaitaToolUtils.toggleEnchantment(itemInHand, player, I18n.get("item.manaita_plus_neo.manaita_paxel"));
+                ManaitaToolUtils.toggleEnchantment(itemInHand, player, toolBase.getItemName());
             }
         }
         return InteractionResultHolder.pass(itemInHand);
@@ -146,6 +157,6 @@ public class ManaitaPaxel extends DiggerItem implements IManaitaPlusKey {
     
     @Override
     public Component getName(ItemStack stack) {
-        return Component.literal(ManaitaToolUtils.ManaitaText.manaita_infinity.formatting(I18n.get("item.manaita_plus_neo.manaita_paxel")));
+        return Component.literal(ManaitaTextFormatter.ManaitaText.manaita_infinity.formatting(I18n.get("item.manaita_plus_neo.manaita_paxel")));
     }
 }

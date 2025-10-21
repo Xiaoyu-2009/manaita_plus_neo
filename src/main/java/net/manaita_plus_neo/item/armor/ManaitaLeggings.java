@@ -1,9 +1,8 @@
 package net.manaita_plus_neo.item.armor;
 
 import net.manaita_plus_neo.item.data.IManaitaPlusKey;
-import net.manaita_plus_neo.util.ManaitaToolUtils;
 import net.manaita_plus_neo.util.ManaitaArmorUtils;
-import net.minecraft.client.resources.language.I18n;
+import net.manaita_plus_neo.util.ManaitaCommonUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
@@ -20,12 +19,7 @@ public class ManaitaLeggings extends ArmorItem implements IManaitaPlusKey {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, context, tooltip, flag);
-        tooltip.add(Component.literal(ManaitaToolUtils.ManaitaText.manaita_infinity.formatting(I18n.get("info.armor"))));
-        boolean invisibility = ManaitaArmorUtils.getInvisibility(stack);
-        String statusText = invisibility ? I18n.get("info.on") : I18n.get("info.off");
-        tooltip.add(Component.literal(ManaitaToolUtils.ManaitaText.manaita_mode.formatting(
-            I18n.get("mode.invisibility") + ": " + statusText)
-        ));
+        ManaitaCommonUtils.addLeggingsTooltip(stack, tooltip);
     }
     
     @Override
@@ -45,6 +39,6 @@ public class ManaitaLeggings extends ArmorItem implements IManaitaPlusKey {
 
 /*     @Override
     public Component getName(ItemStack stack) {
-        return Component.literal(ManaitaToolUtils.ManaitaText.manaita_infinity.formatting(I18n.get("item.manaita_plus_neo.manaita_leggings")));
+        return Component.literal(ManaitaTextFormatter.ManaitaText.manaita_infinity.formatting(I18n.get("item.manaita_plus_neo.manaita_leggings")));
     } */
 }
