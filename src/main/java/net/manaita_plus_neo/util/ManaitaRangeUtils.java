@@ -1,6 +1,5 @@
 package net.manaita_plus_neo.util;
 
-import net.manaita_plus_neo.Config;
 import net.manaita_plus_neo.item.tools.ManaitaPaxel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -34,7 +33,6 @@ public class ManaitaRangeUtils {
         BiPredicate<ItemStack, BlockState> canMineBlock
     ) {
         performRangeBreakWithHandler(toolItem, level, pos, player, range, canMineBlock, 
-            getDefaultBlockHandler()
         );
     }
     
@@ -47,7 +45,6 @@ public class ManaitaRangeUtils {
     ) {
         performRangeBreakWithHandler(stack, level, pos, player, range, 
             (tool, blockState) -> canDestroyBlock(blockState),
-            getDefaultBlockHandler()
         );
     }
     
@@ -93,14 +90,6 @@ public class ManaitaRangeUtils {
         void handle(ItemStack toolItem, Level level, Player player, BlockPos pos, BlockState blockstate);
     }
     
-    private static BlockHandler getDefaultBlockHandler() {
-        return (toolItem, lvl, ply, blockPos, blockstate) -> {
-            BlockEvent.BreakEvent breakEvent = new BlockEvent.BreakEvent(lvl, blockPos, blockstate, ply);
-            handleDropsAndExp(breakEvent, toolItem);
-            destroyBlockWithEnchantments(toolItem, lvl, ply, blockPos, blockstate);
-        };
-    }
-    
     public static boolean canDestroyBlock(BlockState blockState) {
         return true;
     }
@@ -137,10 +126,6 @@ public class ManaitaRangeUtils {
     }
     
     public static void handleDropsAndExp(BlockEvent.BreakEvent event, ItemStack toolStack) {
-        if (event.getPlayer().getAbilities().instabuild) {
-            return;
-        }
-        
         if (ManaitaToolUtils.isDoublingEnabled(toolStack)) {
             Level level = event.getPlayer().level();
             BlockPos pos = event.getPos();
@@ -152,7 +137,6 @@ public class ManaitaRangeUtils {
             for (ItemStack drop : drops) {
                 if (!drop.isEmpty()) {
                     ItemStack extraDrop = drop.copy();
-                    extraDrop.setCount(extraDrop.getCount() * Config.destroy_doubling_value);
                     ItemEntity itemEntity = new ItemEntity(
                         level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, extraDrop
                     );
@@ -162,7 +146,6 @@ public class ManaitaRangeUtils {
 
             if (toolStack.getItem() instanceof ManaitaPaxel && state.getBlock().defaultDestroyTime() < 0) {
                 ItemStack bedrockDrop = new ItemStack(state.getBlock());
-                bedrockDrop.setCount(bedrockDrop.getCount() * Config.destroy_doubling_value);
                 ItemEntity itemEntity = new ItemEntity(
                     level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, bedrockDrop
                 );
@@ -172,7 +155,6 @@ public class ManaitaRangeUtils {
             if (!hasSilkTouch(EnchantmentHelper.getEnchantmentsForCrafting(toolStack))) {
                 int exp = state.getExpDrop((ServerLevel) level, pos, blockEntity, event.getPlayer(), toolStack);
                 if (exp > 0) {
-                    ExperienceOrb.award((ServerLevel) level, Vec3.atCenterOf(pos), exp * Config.destroy_doubling_value);
                 }
             }
         }
