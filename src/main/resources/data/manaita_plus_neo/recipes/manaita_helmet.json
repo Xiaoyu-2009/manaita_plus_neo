@@ -6,11 +6,11 @@
   ],
   "key": {
     "$": {
-      "tag": "manaita_plus_legacy:manaita_block_eq"
+      "tag": "manaita_plus_neo:manaita_block_eq"
     }
   },
   "result": {
-    "item": "manaita_plus_legacy:manaita_helmet",
+    "item": "manaita_plus_neo:manaita_helmet",
     "count": 1
   }
 }

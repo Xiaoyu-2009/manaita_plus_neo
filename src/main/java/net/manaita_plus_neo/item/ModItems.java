@@ -1,6 +1,7 @@
 package net.manaita_plus_neo.item;
 
 import net.manaita_plus_neo.ManaitaPlusNeo;
+import net.manaita_plus_neo.block.*;
 import net.manaita_plus_neo.item.tools.*;
 import net.manaita_plus_neo.item.weapon.ManaitaBow;
 import net.manaita_plus_neo.item.weapon.ManaitaSword;
@@ -68,14 +69,14 @@ public class ModItems {
     // 砧板剪刀
     public static final DeferredItem<Item> MANAITA_SHEARS = ITEMS.registerItem("manaita_shears", properties -> 
         new ManaitaShears(
-            properties
+            properties.stacksTo(1)
         )
     );
 
     // 砧板弓
     public static final DeferredItem<Item> MANAITA_BOW = ITEMS.registerItem("manaita_bow", properties -> 
         new ManaitaBow(
-            properties
+            properties.stacksTo(1)
         )
     );
 
@@ -132,6 +133,26 @@ public class ModItems {
                 ))
         )
     );
+    
+    // 砧板工作台[类型]
+    public static final DeferredItem<Item> CRAFTING_BLOCK = ITEMS.register("block_crafting_manaita", 
+        () -> new ManaitaCraftingBlockItem(ModBlocks.CRAFTING_BLOCK.get(), new Item.Properties()
+    ));
+    
+    // 砧板熔炉[类型]
+    public static final DeferredItem<Item> FURNACE_BLOCK = ITEMS.register("block_furnace_manaita", 
+        () -> new ManaitaFurnaceBlockItem(ModBlocks.FURNACE_BLOCK.get(), new Item.Properties()
+    ));
+    
+    // 砧板钩[橡木]
+    public static final DeferredItem<Item> WOODEN_HOOK = ITEMS.register("manaita_hook", 
+        () -> new Item(new Item.Properties()
+    ));
+    
+    // 砧板钩[类型]
+    public static final DeferredItem<Item> HOOK_BLOCK = ITEMS.register("block_hook_manaita", 
+        () -> new ManaitaHookBlockItem(ModBlocks.HOOK_BLOCK.get(), new Item.Properties()
+    ));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
