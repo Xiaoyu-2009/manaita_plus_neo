@@ -174,6 +174,11 @@ public class ModItems {
         () -> new ManaitaCraftingPortable(new Item.Properties().stacksTo(1))
     );
 
+    // 砧板之尘
+    public static final DeferredItem<Item> SOURCE = ITEMS.register("manaita_source", 
+        () -> new Item(new Item.Properties())
+    );
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

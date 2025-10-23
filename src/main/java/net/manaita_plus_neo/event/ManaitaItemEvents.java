@@ -60,6 +60,8 @@ public class ManaitaItemEvents {
             manaitaItems.add(ModItems.WOODEN_HOOK.get());
             // 砧板钩[类型]
             manaitaItems.add(ModItems.HOOK_BLOCK.get());
+            // 砧板之尘
+            manaitaItems.add(ModItems.SOURCE.get());
         }
     }
 

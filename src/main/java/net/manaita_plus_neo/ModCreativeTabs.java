@@ -282,6 +282,8 @@ public class ModCreativeTabs {
                 output.accept(ModItems.MANAITA_PAXEL.get());
                 // 砧板之刃[神]
                 output.accept(ModItems.MANAITA_SWORD_GOD.get());
+                // 砧板之尘
+                output.accept(ModItems.SOURCE.get());
             })
             .build());
 
