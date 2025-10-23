@@ -30,7 +30,7 @@ public class FurnaceManaitaScreen extends AbstractContainerScreen<ManaitaFurnace
 
     public FurnaceManaitaScreen(ManaitaFurnaceMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
-        doubling_text = Config.furnace_doubling_value + "x";
+        doubling_text = Config.furnace_doubling.get() + "x";
     }
 
     @Override

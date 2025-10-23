@@ -1,5 +1,5 @@
 {
-  "itemGroup.ManaitaPlusTab":"Manaita Plus Neo",
+  "itemGroup.ManaitaPlusTab":"まな板：革新",
 
   "container.crafting_manaita": "まな板",
   "container.furnace_manaita": "まな板",
@@ -116,13 +116,13 @@
   "mode.invisibility": "透明化",
   "mode.speed": "スピードレベル",
 
-  "key.categories.manaita_plus_neo": "Manaita Plus Neo",
+  "key.categories.manaita_plus_neo": "まな板：革新",
   "key.manaita":"まな板",
   "key.manaita.helmet": "ヘルメットモード変更",
   "key.manaita.chestplate": "チェストプレートモード変更",
   "key.manaita.leggings": "レギンスモード変更",
   "key.manaita.boots": "ブーツモード変更",
 
-  "enchantments.fortune": "时运",
-  "enchantments.silktouch": "精准挖掘"
+  "enchantments.fortune": "时運",
+  "enchantments.silktouch": "精度よく掘り起こす"
 }

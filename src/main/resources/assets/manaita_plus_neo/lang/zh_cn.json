@@ -1,5 +1,5 @@
 {
-  "itemGroup.ManaitaPlusTab":"砧板传承Neo版",
+  "itemGroup.ManaitaPlusTab":"砧板：革新",
 
   "container.crafting_manaita": "砧板工作台",
   "container.furnace_manaita": "砧板熔炉",
@@ -115,7 +115,7 @@
   "mode.invisibility": "隐身",
   "mode.speed": "速度等级",
 
-  "key.categories.manaita_plus_neo": "砧板传承Neo版",
+  "key.categories.manaita_plus_neo": "砧板：革新",
   "key.manaita":"更改模式",
   "key.manaita.helmet": "更改头盔模式",
   "key.manaita.chestplate": "更改护甲模式",

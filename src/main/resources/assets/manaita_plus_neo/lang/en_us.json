@@ -1,5 +1,5 @@
 {
-  "itemGroup.ManaitaPlusTab":"Manaita Plus Neo",
+  "itemGroup.ManaitaPlusTab":"Manaita Plus: Innovation",
 
   "container.crafting_manaita": "Crafting Cutting Board",
   "container.furnace_manaita": "Furnace Cutting Board",
@@ -115,7 +115,7 @@
   "mode.invisibility": "Invisibility",
   "mode.speed": "Speed Level",
 
-  "key.categories.manaita_plus_neo": "Manaita Plus Neo",
+  "key.categories.manaita_plus_neo": "Manaita Plus: Innovation",
   "key.manaita":"Change Mode",
   "key.manaita.helmet": "Change Helmet Mode",
   "key.manaita.chestplate": "Change Chestplate Mode",

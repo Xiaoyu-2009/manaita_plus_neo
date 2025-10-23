@@ -124,10 +124,8 @@ public class ManaitaRangeUtils {
 
         if (!ManaitaToolUtils.isDoublingEnabled(toolItem)) {
             Block.dropResources(blockstate, level, pos, null, player, toolItem);
-        }
 
-        if (toolItem.getItem() instanceof ManaitaPaxel && blockstate.getBlock().defaultDestroyTime() < 0) {
-            if (!ManaitaToolUtils.isDoublingEnabled(toolItem)) {
+            if (toolItem.getItem() instanceof ManaitaPaxel && blockstate.getBlock().defaultDestroyTime() < 0) {
                 ItemStack bedrockDrop = new ItemStack(blockstate.getBlock());
                 popResource(level, pos, bedrockDrop);
             }
@@ -152,7 +150,7 @@ public class ManaitaRangeUtils {
             for (ItemStack drop : drops) {
                 if (!drop.isEmpty()) {
                     ItemStack extraDrop = drop.copy();
-                    extraDrop.setCount(extraDrop.getCount() * Config.destroy_doubling_value);
+                    extraDrop.setCount(extraDrop.getCount() * Config.destroy_doubling.get());
                     ItemEntity itemEntity = new ItemEntity(
                         level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, extraDrop
                     );
@@ -162,7 +160,7 @@ public class ManaitaRangeUtils {
 
             if (toolStack.getItem() instanceof ManaitaPaxel && state.getBlock().defaultDestroyTime() < 0) {
                 ItemStack bedrockDrop = new ItemStack(state.getBlock());
-                bedrockDrop.setCount(bedrockDrop.getCount() * Config.destroy_doubling_value);
+                bedrockDrop.setCount(bedrockDrop.getCount() * Config.destroy_doubling.get());
                 ItemEntity itemEntity = new ItemEntity(
                     level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, bedrockDrop
                 );
@@ -172,7 +170,7 @@ public class ManaitaRangeUtils {
             if (!hasSilkTouch(EnchantmentHelper.getEnchantmentsForCrafting(toolStack))) {
                 int exp = state.getExpDrop((ServerLevel) level, pos, blockEntity, event.getPlayer(), toolStack);
                 if (exp > 0) {
-                    ExperienceOrb.award((ServerLevel) level, Vec3.atCenterOf(pos), exp * Config.destroy_doubling_value);
+                    ExperienceOrb.award((ServerLevel) level, Vec3.atCenterOf(pos), exp * Config.destroy_doubling.get());
                 }
             }
         }

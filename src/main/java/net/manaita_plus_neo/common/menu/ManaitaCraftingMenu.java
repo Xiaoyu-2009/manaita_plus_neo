@@ -64,7 +64,7 @@ public class ManaitaCraftingMenu extends RecipeBookMenu<CraftingInput, CraftingR
                 CraftingRecipe craftingrecipe = optional.get().value();
                 itemstack = craftingrecipe.assemble(craftingContainer.asCraftInput(), level.registryAccess());
                 if (!itemstack.isEmpty()) {
-                    itemstack.setCount(itemstack.getCount() * Config.crafting_doubling_value);
+                    itemstack.setCount(itemstack.getCount() * Config.crafting_doubling.get());
                 }
             }
 

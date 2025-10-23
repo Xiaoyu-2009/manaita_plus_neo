@@ -49,8 +49,8 @@ public class ManaitaFurnaceBlockEntity extends AbstractFurnaceBlockEntity {
     }
 
     protected void createExperience(ServerLevel level, Vec3 pos, int recipeIndex, float experience) {
-        int i = Mth.floor((float)recipeIndex * experience * Config.furnace_doubling_value);
-        float f = Mth.frac((float)recipeIndex * experience * Config.furnace_doubling_value);
+        int i = Mth.floor((float)recipeIndex * experience * Config.furnace_doubling.get());
+        float f = Mth.frac((float)recipeIndex * experience * Config.furnace_doubling.get());
         if (f != 0.0F && Math.random() < (double)f) {
             i++;
         }
@@ -133,7 +133,7 @@ public class ManaitaFurnaceBlockEntity extends AbstractFurnaceBlockEntity {
                 } else if (!ItemStack.isSameItemSameComponents(itemstack1, itemstack)) {
                     return false;
                 } else {
-                    int resultCount = itemstack.getCount() * Config.furnace_doubling_value;
+                    int resultCount = itemstack.getCount() * Config.furnace_doubling.get();
                     return itemstack1.getCount() + resultCount <= this.getMaxStackSize() && 
                     itemstack1.getCount() + resultCount <= itemstack1.getMaxStackSize()
                     ? true
@@ -152,10 +152,10 @@ public class ManaitaFurnaceBlockEntity extends AbstractFurnaceBlockEntity {
             ItemStack itemstack2 = this.items.get(2);
             if (itemstack2.isEmpty()) {
                 ItemStack copy = itemstack1.copy();
-                copy.setCount(copy.getCount() * Config.furnace_doubling_value);
+                copy.setCount(copy.getCount() * Config.furnace_doubling.get());
                 this.items.set(2, copy);
             } else if (ItemStack.isSameItemSameComponents(itemstack2, itemstack1)) {
-                itemstack2.grow(itemstack1.getCount() * Config.furnace_doubling_value);
+                itemstack2.grow(itemstack1.getCount() * Config.furnace_doubling.get());
             }
 
             if (itemstack.is(Blocks.WET_SPONGE.asItem()) && !this.items.get(1).isEmpty() && this.items.get(1).is(Items.BUCKET)) {

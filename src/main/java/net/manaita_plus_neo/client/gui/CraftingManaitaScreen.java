@@ -29,7 +29,7 @@ public class CraftingManaitaScreen extends AbstractContainerScreen<ManaitaCrafti
 
     public CraftingManaitaScreen(ManaitaCraftingMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
-        doubling_text = Config.crafting_doubling_value + "x";
+        doubling_text = Config.crafting_doubling.get() + "x";
     }
 
     @Override

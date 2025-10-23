@@ -51,15 +51,6 @@ public class ManaitaToolEvents {
         if (itemstack.getItem() instanceof ManaitaPaxel) {
             int range = ManaitaToolUtils.getRange(itemstack);
 
-            BlockState state = event.getLevel().getBlockState(event.getPos());
-            BlockEvent.BreakEvent breakEvent = new BlockEvent.BreakEvent(
-                event.getLevel(), 
-                event.getPos(), 
-                state, 
-                player
-            );
-            ManaitaToolUtils.handleDropsAndExp(breakEvent, itemstack);
-
             ManaitaToolUtils.destroyBlocksInRange(
                 itemstack,
                 event.getLevel(),
@@ -82,7 +73,5 @@ public class ManaitaToolEvents {
             range, 
             canMineBlock
         );
-
-        ManaitaToolUtils.handleDropsAndExp(event, itemstack);
     }
 }

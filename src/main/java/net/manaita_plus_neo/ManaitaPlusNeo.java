@@ -26,12 +26,7 @@ public class ManaitaPlusNeo
         ModMenuTypes.MENUS.register(modEventBus);
         ModCreativeTabs.register(modEventBus);
         modEventBus.addListener(Networking::register);
-        modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(ClientSetupEvents::clientSetup);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
-    }
-    
-    private void commonSetup(FMLCommonSetupEvent event) {
-        Config.onLoad();
     }
 }
