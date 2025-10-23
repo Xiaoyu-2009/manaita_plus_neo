@@ -137,4 +137,14 @@ public class ManaitaMessageUtils {
             I18n.get("mode.speed") + ": " + displaySpeed)
         ));
     }
+    
+    public static void sendGodSwordTooltipMessage(ItemStack stack, List<Component> tooltip) {
+        tooltip.add(Component.literal(ManaitaText.manaita_mode.formatting(
+            I18n.get("mode.remove.name") + ":" + I18n.get("info.on")
+        )));
+        tooltip.add(Component.empty());
+        tooltip.add(Component.literal(ManaitaText.manaita_enchantment.formatting(
+            I18n.get("info.item.manaita_sword_god.1")
+        )));
+    }
 }

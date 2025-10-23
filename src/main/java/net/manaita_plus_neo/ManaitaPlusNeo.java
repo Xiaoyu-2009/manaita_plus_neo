@@ -4,6 +4,7 @@ import net.manaita_plus_neo.block.ModBlocks;
 import net.manaita_plus_neo.block.entity.ModBlockEntities;
 import net.manaita_plus_neo.client.ClientSetupEvents;
 import net.manaita_plus_neo.common.menu.ModMenuTypes;
+import net.manaita_plus_neo.entity.ModEntities;
 import net.manaita_plus_neo.item.ModItems;
 import net.manaita_plus_neo.network.Networking;
 import net.neoforged.bus.api.IEventBus;
@@ -21,6 +22,7 @@ public class ManaitaPlusNeo
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
         ModBlockEntities.register(modEventBus);
+        ModEntities.register(modEventBus);
         ModMenuTypes.MENUS.register(modEventBus);
         ModCreativeTabs.register(modEventBus);
         modEventBus.addListener(Networking::register);

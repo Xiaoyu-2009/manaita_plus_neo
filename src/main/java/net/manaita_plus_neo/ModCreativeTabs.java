@@ -220,6 +220,8 @@ public class ModCreativeTabs {
                 output.accept(ModItems.MANAITA_BOOTS.get());
                 // 砧板多功能工具
                 output.accept(ModItems.MANAITA_PAXEL.get());
+                // 砧板之刃[神]
+                output.accept(ModItems.MANAITA_SWORD_GOD.get());
             })
             .build());
 

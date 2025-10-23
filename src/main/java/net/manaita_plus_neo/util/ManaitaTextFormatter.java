@@ -1,6 +1,7 @@
 package net.manaita_plus_neo.util;
 
 import net.minecraft.ChatFormatting;
+
 import java.util.Arrays;
 
 public class ManaitaTextFormatter {

@@ -6,6 +6,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Blocks;
+
 import java.util.List;
 
 public class ManaitaCommonUtils {
@@ -16,6 +17,10 @@ public class ManaitaCommonUtils {
 
     public static void addWeaponTooltip(ItemStack stack, List<Component> tooltip, String weaponType) {
         ManaitaMessageUtils.sendWeaponTooltipMessage(stack, tooltip, weaponType);
+    }
+    
+    public static void addGodSwordTooltip(ItemStack stack, List<Component> tooltip) {
+        ManaitaMessageUtils.sendGodSwordTooltipMessage(stack, tooltip);
     }
 
     public static void addArmorTooltip(ItemStack stack, List<Component> tooltip) {

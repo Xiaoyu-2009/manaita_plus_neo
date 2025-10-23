@@ -5,6 +5,7 @@ import net.manaita_plus_neo.block.*;
 import net.manaita_plus_neo.item.tools.*;
 import net.manaita_plus_neo.item.weapon.ManaitaBow;
 import net.manaita_plus_neo.item.weapon.ManaitaSword;
+import net.manaita_plus_neo.item.weapon.ManaitaSwordGod;
 import net.manaita_plus_neo.item.armor.*;
 import net.minecraft.world.item.*;
 import net.neoforged.bus.api.IEventBus;
@@ -84,7 +85,7 @@ public class ModItems {
     public static final DeferredItem<Item> MANAITA_SWORD = ITEMS.registerItem("manaita_sword", properties -> 
         new ManaitaSword(
             Tiers.NETHERITE, 
-            properties.attributes(
+            properties.stacksTo(1).attributes(
                 SwordItem.createAttributes(
                     Tiers.NETHERITE, 
                     10000.0F, 
@@ -125,8 +126,21 @@ public class ModItems {
     public static final DeferredItem<Item> MANAITA_PAXEL = ITEMS.registerItem("manaita_paxel", properties -> 
         new ManaitaPaxel(
             Tiers.NETHERITE, 
-            properties.attributes(
+            properties.stacksTo(1).attributes(
                 DiggerItem.createAttributes(
+                    Tiers.NETHERITE, 
+                    10000.0F, 
+                    10000.0F
+                ))
+        )
+    );
+
+    // 砧板之刃[神]
+    public static final DeferredItem<Item> MANAITA_SWORD_GOD = ITEMS.registerItem("manaita_sword_god", properties -> 
+        new ManaitaSwordGod(
+            Tiers.NETHERITE, 
+            properties.stacksTo(1).attributes(
+                SwordItem.createAttributes(
                     Tiers.NETHERITE, 
                     10000.0F, 
                     10000.0F
