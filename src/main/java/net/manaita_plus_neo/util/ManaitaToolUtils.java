@@ -15,7 +15,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.event.level.BlockEvent;
 
 import java.util.function.BiPredicate;
 
@@ -70,10 +69,6 @@ public class ManaitaToolUtils {
         }
         setRange(itemStack, newRange);
         ManaitaMessageUtils.sendRangeChangeMessage(player, itemStack, itemName, newRange);
-    }
-
-    public static void handleDropsAndExp(BlockEvent.BreakEvent event, ItemStack toolStack) {
-        ManaitaRangeUtils.handleDropsAndExp(event, toolStack);
     }
 
     public static void handleManaitaKeyPress(ItemStack itemStack, Player player, String itemName) {
