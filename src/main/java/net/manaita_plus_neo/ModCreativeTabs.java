@@ -15,7 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 public class ModCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ManaitaPlusNeo.MOD_ID);
 
-    // 更好的砧板
+    // 砧板：革新
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MANAITA_PLUS_TAB = CREATIVE_TABS.register("manaita_plus_tab", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.ManaitaPlusTab"))
             .icon(() -> new ItemStack(ModItems.CRAFTING_BLOCK.get()))
