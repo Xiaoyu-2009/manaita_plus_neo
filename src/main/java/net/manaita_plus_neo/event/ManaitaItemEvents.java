@@ -54,6 +54,8 @@ public class ManaitaItemEvents {
             manaitaItems.add(ModItems.CRAFTING_BLOCK.get());
             // 砧板熔炉[类型]
             manaitaItems.add(ModItems.FURNACE_BLOCK.get());
+            // 便捷式砧板工作台[类型]
+            manaitaItems.add(ModItems.CRAFTING_PORTABLE.get());
             // 砧板钩[橡木]
             manaitaItems.add(ModItems.WOODEN_HOOK.get());
             // 砧板钩[类型]
