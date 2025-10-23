@@ -24,7 +24,7 @@ public class ManaitaBow extends ManaitaWeaponBase {
             Arrow arrow = EntityType.ARROW.create(level);
             if (arrow != null) {
                 arrow.setPos(player.getX(), player.getEyeY() - 0.1F, player.getZ());
-                arrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 100.0F, 0.0F);
+                arrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 10000.0F, 0.0F);
                 arrow.setCritArrow(true);
                 arrow.setBaseDamage(10000.0F);
 
